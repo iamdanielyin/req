@@ -122,6 +122,10 @@ func TestCALL(t *testing.T) {
 	}
 	t.Log(post)
 
+	if err := CALL(http.MethodPost, "https://jsonplaceholder.typicode.com/posts", map[string]any{"Title": "Hello"}, nil, map[string]string{"UID": "1"}); err != nil {
+		t.Fatal(err)
+	}
+
 	if err := CALL(" ", "https://54d483ff-bb2b-a4f7-26e4-6b8b11c09ed1.com/api/abc", nil, &post); err == nil {
 		t.Fatal("test failed")
 	}

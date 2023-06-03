@@ -118,12 +118,14 @@ func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[str
 	}
 	defer res.Body.Close()
 
-	resp, err := io.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-	if err := json.Unmarshal(resp, &dst); err != nil {
-		return err
+	if dst != nil {
+		resp, err := io.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+		if err := json.Unmarshal(resp, dst); err != nil {
+			return err
+		}
 	}
 	return nil
 }
