@@ -11,7 +11,7 @@ import "github.com/iamdanielyin/req"
 ```
 to your code, and then `go [build|run|test]` will automatically fetch the necessary dependencies.
 
-Otherwise, run the following Go command to install the gin package:
+Otherwise, run the following Go command to install the `req` package:
 
 ```shell
 $ go get -u github.com/iamdanielyin/req
