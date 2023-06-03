@@ -128,7 +128,7 @@ func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[str
 	return nil
 }
 
-func URL(format string, values ...any) *urlCaller {
+func URL(format string, values ...any) Caller {
 	return &urlCaller{
 		url: fmt.Sprintf(format, values...),
 	}
