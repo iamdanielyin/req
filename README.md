@@ -48,12 +48,12 @@ $ go run example.go
 
 ## List of APIs
 
-- `req.GET(url, dst)`
-- `req.POST(url, body, dst)`
-- `req.PATCH(url, body, dst)`
-- `req.PUT(url, body, dst)`
-- `req.DELETE(url, body, dst)`
-- `req.CALL(method, url, body, dst)`
+- `req.GET(url, dst[, headers])`
+- `req.POST(url, body, dst[, headers])`
+- `req.PATCH(url, body, dst[, headers])`
+- `req.PUT(url, body, dst[, headers])`
+- `req.DELETE(url, body, dst[, headers])`
+- `req.CALL(method, url, body, dst[, headers])`
 - `req.URL(format, values...)`
   - `.GET(dst[, headers])`
   - `.POST(body, dst[, headers])`
