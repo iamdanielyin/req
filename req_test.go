@@ -130,3 +130,12 @@ func TestCALL(t *testing.T) {
 		t.Fatal("test failed")
 	}
 }
+
+func TestNewCALL(t *testing.T) {
+	var ret map[string]string
+	caller := NewCALL("POST", "https://jsonplaceholder.typicode.com/posts/1", map[string]any{"Title": "Hello"}, &ret, map[string]string{"UID": "1"})
+	if err := caller.Do(); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ret)
+}

@@ -15,6 +15,8 @@ type Caller interface {
 	DelHeader(k string) Caller
 	SetHeaders(headers map[string]string) Caller
 	SetBody(body any) Caller
+	SetMethod(method string) Caller
+	Do() error
 	GET(dst any, headers ...map[string]string) error
 	POST(body, dst any, headers ...map[string]string) error
 	PATCH(body, dst any, headers ...map[string]string) error
@@ -25,12 +27,23 @@ type Caller interface {
 
 type urlCaller struct {
 	url     string
+	method  string
 	body    any
+	dst     any
 	headers map[string]string
 }
 
 func (receiver *urlCaller) URL() string {
 	return receiver.url
+}
+
+func (receiver *urlCaller) SetMethod(method string) Caller {
+	receiver.method = method
+	return receiver
+}
+
+func (receiver *urlCaller) Do() error {
+	return receiver.CALL(receiver.method, receiver.body, receiver.dst, receiver.headers)
 }
 
 func (receiver *urlCaller) Headers() map[string]string {
@@ -162,4 +175,45 @@ func DELETEWithBody(url string, body, dst any, headers ...map[string]string) err
 
 func CALL(method, url string, body, dst any, headers ...map[string]string) error {
 	return URL(url).CALL(method, body, dst, headers...)
+}
+
+func NewGET(url string, dst any, headers ...map[string]string) Caller {
+	return NewCALL(http.MethodGet, url, nil, dst, headers...)
+}
+
+func NewPOST(url string, body, dst any, headers ...map[string]string) Caller {
+	return NewCALL(http.MethodPost, url, body, dst, headers...)
+}
+
+func NewPATCH(url string, body, dst any, headers ...map[string]string) Caller {
+	return NewCALL(http.MethodPatch, url, body, dst, headers...)
+}
+
+func NewPUT(url string, body, dst any, headers ...map[string]string) Caller {
+	return NewCALL(http.MethodPut, url, body, dst, headers...)
+}
+
+func NewDELETE(url string, dst any, headers ...map[string]string) Caller {
+	return NewCALL(http.MethodDelete, url, nil, dst, headers...)
+}
+
+func NewDELETEWithBody(url string, body, dst any, headers ...map[string]string) Caller {
+	return NewCALL(http.MethodDelete, url, body, dst, headers...)
+}
+
+func NewCALL(method, url string, body, dst any, headers ...map[string]string) Caller {
+	return &urlCaller{
+		url:     url,
+		method:  method,
+		body:    body,
+		dst:     dst,
+		headers: getHeaders(headers),
+	}
+}
+
+func getHeaders(headers []map[string]string) map[string]string {
+	if len(headers) > 0 {
+		return headers[0]
+	}
+	return nil
 }
