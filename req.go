@@ -95,7 +95,7 @@ func (receiver *urlCaller) DELETE(dst any, headers ...map[string]string) error {
 	return receiver.CALL(http.MethodDelete, nil, dst, headers...)
 }
 
-func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[string]string) error {
+func (receiver *urlCaller) Raw(method string, body any, headers ...map[string]string) (*http.Response, error) {
 	if body != nil {
 		receiver.body = body
 	}
@@ -106,7 +106,7 @@ func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[str
 	var payload io.Reader
 	if receiver.body != nil {
 		if data, err := json.Marshal(receiver.body); err != nil {
-			return err
+			return nil, err
 		} else {
 			payload = strings.NewReader(string(data))
 		}
@@ -116,7 +116,7 @@ func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[str
 	req, err := http.NewRequest(method, receiver.url, payload)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/json")
 	if len(receiver.headers) > 0 {
@@ -125,7 +125,11 @@ func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[str
 		}
 	}
 
-	res, err := client.Do(req)
+	return client.Do(req)
+}
+
+func (receiver *urlCaller) CALL(method string, body, dst any, headers ...map[string]string) error {
+	res, err := receiver.Raw(method, body, headers...)
 	if err != nil {
 		return err
 	}
