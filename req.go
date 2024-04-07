@@ -23,6 +23,7 @@ type Caller interface {
 	PUT(body, dst any, headers ...map[string]string) error
 	DELETE(dst any, headers ...map[string]string) error
 	CALL(method string, body, dst any, headers ...map[string]string) error
+	Raw(method string, body any, headers ...map[string]string) (*http.Response, error)
 }
 
 type urlCaller struct {
