@@ -182,6 +182,10 @@ func CALL(method, url string, body, dst any, headers ...map[string]string) error
 	return URL(url).CALL(method, body, dst, headers...)
 }
 
+func Raw(method, url string, body any, headers ...map[string]string) (*http.Response, error) {
+	return URL(url).Raw(method, body, headers...)
+}
+
 func NewGET(url string, dst any, headers ...map[string]string) Caller {
 	return NewCALL(http.MethodGet, url, nil, dst, headers...)
 }
